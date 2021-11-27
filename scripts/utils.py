@@ -16,8 +16,8 @@ contract_to_mock = {
 def get_account(index=None, id=None):
     # 获取account方式有2中
     # accounts[0]  通过下标
-    # accounts.add("env") 如果通过add的方式添加了账号
-    # accounts.load("id") 则可以通过load方法去获取该账号
+    # accounts.add("env") 通过add的方式添加了账号并返回该账号
+    # accounts.load("id") 通过load方法去获取该账号
     if index:
         return accounts[index]
     if id:
@@ -27,11 +27,15 @@ def get_account(index=None, id=None):
             or network.show_active() in FORKED_LOCAL_ENVIRONMENTS
     ):
         return accounts[0]
-
     return accounts.add(config["wallets"]["from_key"])
 
 
 def get_contract(contract_name):
+    """
+    获得合约对象
+    :param contract_name:
+    :return:
+    """
     contract_type = contract_to_mock[contract_name]
     if network.show_active() in LOCAL_BLOCKCHAIN_ENVIRONMENTS:
         # 假设contract_type = MockV3Aggregator，len(contract_type) 相当于 MockV3Aggregator.length

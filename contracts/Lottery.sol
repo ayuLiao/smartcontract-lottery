@@ -25,6 +25,9 @@ contract Lottery is VRFConsumerBase, Ownable {
     uint256 fee; // 调用时需要的费用
     bytes32 keyhash; // 用户确认VRF Coordinator唯一身份
     uint256 randomness;
+    // 事件 - 将数据记录到事件日志的
+    // https://learnblockchain.cn/2018/05/09/solidity-event/
+    event RequestedRandomness(bytes32 requestId);
 
     // 当前合约的constructor
     constructor(
@@ -84,6 +87,8 @@ contract Lottery is VRFConsumerBase, Ownable {
         // 调用requestRandomness函数时，传入keyhash用于验证身份，传入fee支付调用外部合约需要支付的金额
         // fee是当前合约调用其他合约时，需要支付的金额，一开始，当前合约是没有LINK代币的，此时需要我们从自己的账户中转入相应的LINK到当前合约中
         bytes32 requestId = requestRandomness(keyhash, fee);
+        // 触发RandomnessRequest事件，将requestId传入
+        emit RequestedRandomness(requestId);
     }
 
     // fulfillRandomness函数名称是固定的，因为外部合约callback时，会通过该名称调用相应的方法
